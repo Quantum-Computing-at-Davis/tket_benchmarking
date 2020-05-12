@@ -1,4 +1,19 @@
 from pytket import *
+from pytket.passes import (FullPeepholeOptimise, 
+    RebaseCirq, 
+    RebaseIBM, 
+    RebaseQuil, 
+    DefaultMappingPass, 
+    SynthesiseIBM, 
+    SequencePass, 
+    PauliSimp, 
+    DecomposeSwapsToCXs)
+from pytket.device import Device
+from pytket.routing import Architecture
+from pytket.qasm import circuit_from_qasm
+from pytket.circuit import OpType
+from pytket.predicates import CompilationUnit
+from pytket.transform import Transform
 from pytket.qiskit import tk_to_qiskit, qiskit_to_tk
 from pytket.pyquil import tk_to_pyquil, pyquil_to_tk
 
@@ -195,8 +210,9 @@ def gen_tket_pass(optimisepass,backend:str):
     elif backend == _BACKEND_IBM: 
         final_pass = RebaseIBM()
         device = ibm_rochester_device
-    router = gen_default_mapping_pass(device)
-    decomp = gen_decompose_routing_gates_to_cxs_pass(device) ###ignoring connectivity
+    router = DefaultMappingPass(device)
+    #decomp = gen_decompose_routing_gates_to_cxs_pass(device) ###ignoring connectivity
+    decomp = DecomposeSwapsToCXs(device)
     total_pass = SequencePass([optimisepass,router,decomp,SynthesiseIBM(),final_pass])
     return total_pass
 

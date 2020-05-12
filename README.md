@@ -8,3 +8,19 @@ Used to benchmark pytket v0.4.1. To benchmark Qiskit and Quilc, pytket v0.5 is r
 `bench.py` runs the desired compiler/pass on the entire benchmark set and produces a CSV of results.
 
 `usage: bench.py [-c <compiler>] [-b <backend>] [-p <pass>] [-s <set>]`
+
+## Docker Image
+
+For first time run, open terminal in this folder and run
+
+```
+docker image build -t <choice of image name> .
+```
+
+To run a container based off the image
+
+```
+docker container run -v $(pwd):/home -it --name <container name> <image name>
+```
+
+You can have the container automatically destroyed by adding the `--rm` flag
